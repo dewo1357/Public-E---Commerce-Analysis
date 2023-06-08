@@ -103,13 +103,16 @@ min_date = join_all['order_approved_at'].min()
 max_date = join_all['order_approved_at'].max()
 
 with st.sidebar:
-    st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
-
+    
+    st.subheader('FILTER')
     start_date,end_date = st.date_input(
         label='Order Date',min_value=min_date,
         max_value=max_date,
         value=[min_date,max_date]
     )
+
+    st.header('About me')
+    st.caption('My Name is Sadewo Widyanto. I am a high school graduate majoring in social sciences.I have experience in operating databases, and I am currently actively developing knowledge in managing and analyzing data.')
 
 main_df = join_all[(join_all["order_approved_at"] >= str(start_date)) & 
                 (join_all["order_approved_at"] <= str(end_date))]
@@ -120,6 +123,8 @@ bycity_df = create_bycity_df(main_df)
 bystate_df = create_bystate_df(main_df)
 category_product = create_category_product(main_df)
 rfm_analysis = create_rfm_analysis(main_df)
+
+st.header('Hello, Welcome to My Portofolio Dashboard')
 
 st.header('E-Commerce Public Dataset :sparkles:')
 
@@ -230,14 +235,14 @@ ax[1].set_ylabel(None)
 ax[1].set_xlabel("customer_city", fontsize=30)
 ax[1].set_title("By Frequency", loc="center", fontsize=50)
 ax[1].tick_params(axis='y', labelsize=30)
-ax[1].tick_params(axis='x', labelsize=30)
+ax[1].tick_params(axis='x', labelsize=21)
 
 sns.barplot(y="monetary", x="customer_city", data=rfm_analysis.sort_values(by="monetary", ascending=False).head(5), palette=color, ax=ax[2])
 ax[2].set_ylabel(None)
 ax[2].set_xlabel("customer_city", fontsize=30)
 ax[2].set_title("By Monetary", loc="center", fontsize=50)
 ax[2].tick_params(axis='y', labelsize=30)
-ax[2].tick_params(axis='x', labelsize=30)
+ax[2].tick_params(axis='x', labelsize=21)
 
 st.pyplot(fig)
 
