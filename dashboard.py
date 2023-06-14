@@ -70,13 +70,13 @@ def create_category_product(df):
     return category_product
 
 def create_rfm_analysis(df):
-    rfm_analysis = df.groupby('customer_city').agg({
+    rfm_analysis = df.groupby('customer_id').agg({
     'order_approved_at' : 'max',
     'order_id' : 'nunique',
     'price' : 'sum'
     }).reset_index()
     
-    rfm_analysis.columns = ['customer_city', 'max_order_timestamp', 'frequency', 'monetary']
+    rfm_analysis.columns = ['customer_id', 'max_order_timestamp', 'frequency', 'monetary']
     
     rfm_analysis['max_order_timestamp'] = rfm_analysis['max_order_timestamp'].dt.date
     recent_date = df['order_approved_at'].dt.date.max()
@@ -204,7 +204,7 @@ with col2:
     ax.tick_params(axis='y', labelsize=30)
     st.pyplot(fig)
 
-st.subheader("Best City Based on RFM Parameters")
+st.subheader("Best customers Based on RFM Parameters")
  
 col1, col2, col3 = st.columns(3)
  
@@ -220,24 +220,24 @@ with col3:
     avg_frequency = format_currency(rfm_analysis.monetary.mean(), "AUD", locale='es_CO') 
     st.metric("Average Monetary", value=avg_frequency)
  
-fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(35, 15))
+fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(40, 40))
 color = ['#00688B','#97FFFF','#97FFFF','#97FFFF','#97FFFF','#97FFFF']
 
-sns.barplot(x='customer_city',y='recency',data=rfm_analysis.sort_values(by='recency',ascending=True).head(5),palette=color,ax=ax[0])
+sns.barplot(x='customer_id',y='recency',data=rfm_analysis.sort_values(by='recency',ascending=True).head(5),palette=color,ax=ax[0])
 ax[0].set_ylabel(None)
-ax[0].set_xlabel("customer_city", fontsize=30)
+ax[0].set_xlabel("customer_id", fontsize=30)
 ax[0].set_title("By Recency (days)", loc="center", fontsize=50)
 ax[0].tick_params(axis='y', labelsize=30)
-ax[0].tick_params(axis='x', labelsize=30)
+ax[0].tick_params(axis='x', labelsize=21)
 
-sns.barplot(y="frequency", x="customer_city", data=rfm_analysis.sort_values(by="frequency", ascending=False).head(5), palette=color, ax=ax[1])
+sns.barplot(y="frequency", x="customer_id", data=rfm_analysis.sort_values(by="frequency", ascending=False).head(5), palette=color, ax=ax[1])
 ax[1].set_ylabel(None)
-ax[1].set_xlabel("customer_city", fontsize=30)
+ax[1].set_xlabel("customer_id", fontsize=30)
 ax[1].set_title("By Frequency", loc="center", fontsize=50)
 ax[1].tick_params(axis='y', labelsize=30)
 ax[1].tick_params(axis='x', labelsize=21)
 
-sns.barplot(y="monetary", x="customer_city", data=rfm_analysis.sort_values(by="monetary", ascending=False).head(5), palette=color, ax=ax[2])
+sns.barplot(y="monetary", x="customer_id", data=rfm_analysis.sort_values(by="monetary", ascending=False).head(5), palette=color, ax=ax[2])
 ax[2].set_ylabel(None)
 ax[2].set_xlabel("customer_city", fontsize=30)
 ax[2].set_title("By Monetary", loc="center", fontsize=50)
